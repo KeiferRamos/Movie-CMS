@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+body {
+  height: 100vh;
+  width: 100%;
+  background-image: url('./images/login.jpg');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  font-family: 'Poppins', sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.role {
+  text-align: center;
+  text-transform: capitalize;
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.administrator {
+  background: rgba(24, 227, 56, 0.4);
+  border: #3de456 1px solid;
+  color: #159529;
+}
+
+.developer {
+  background: rgba(255, 153, 0, 0.4);
+  border: #f39e66 1px solid;
+  color: #de6610;
+}
+
+.manager {
+  background: rgba(255, 0, 149, 0.4);
+  border: #e93899 1px solid;
+  color: #f7078b;
+}
