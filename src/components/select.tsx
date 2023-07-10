@@ -1,6 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, ReactNode } from 'react';
 import styled from 'styled-components';
 import { CaretDownFilled, CaretUpFilled } from '@ant-design/icons';
+import { StyledInput } from './input';
+import { CloseSquareFilled } from '@ant-design/icons';
+import OutsideAlerter from '../hooks/useClickDetector';
 
 export const StyledSelect = styled.div`
   position: relative;
@@ -20,6 +23,21 @@ export const StyledSelect = styled.div`
     height: 100%;
     padding: 0 10px;
 
+    .selected-list {
+      background: #168ee9;
+      padding: 10px;
+      color: #b7caf2;
+      border-radius: 3px;
+      margin-right: 3px;
+      display: flex;
+      gap: 5px;
+
+      p {
+        display: inline;
+        color: #97d0f3;
+      }
+    }
+
     svg {
       font-size: 20px;
     }
@@ -36,7 +54,7 @@ export const StyledSelect = styled.div`
     width: 100%;
     padding: 10px 5px;
     border: 1px solid;
-    z-index: 1;
+    z-index: 2;
     border-radius: 5px;
 
     span {
@@ -51,62 +69,87 @@ export const StyledSelect = styled.div`
   }
 `;
 
-function Select({ options, onClick, value, disabled = false }) {
-  const [selected, setSelected] = useState(value);
+function Select({
+  options,
+  onClick,
+  value,
+  disabled = false,
+  labelText = '',
+  removeItem = null,
+}) {
+  const item = options.filter(({ value: selectedItem }) => {
+    if (typeof value !== 'object') {
+      return value === selectedItem;
+    } else {
+      return value.find(({ title }) => title === selectedItem.title);
+    }
+  });
+
+  const [selected, setSelected] = useState(item);
   const [isOpen, setIsOpen] = useState(false);
 
-  const ref = useRef<HTMLDivElement>();
-
   useEffect(() => {
-    setSelected(value);
+    setSelected(item);
   }, [value]);
-
-  useEffect(() => {
-    const clickEvent = (e) => {
-      const selectedItem = document.querySelector('.selected');
-      if ((e.target as HTMLElement).contains(selectedItem)) {
-        setIsOpen(false);
-      } else {
-        return;
-      }
-    };
-
-    window.addEventListener('click', clickEvent);
-
-    return window.removeEventListener('click', clickEvent);
-  }, []);
 
   const openSelect = () => {
     setIsOpen(!isOpen);
   };
 
-  const selectItem = (label) => {
-    onClick(label);
+  const selectItem = (item) => {
+    onClick(item);
     setIsOpen(false);
   };
 
   return (
-    <StyledSelect>
-      <div className="selected">
-        <span>{selected}</span>
-        {disabled ? null : isOpen ? (
-          <CaretUpFilled onClick={openSelect} />
-        ) : (
-          <CaretDownFilled onClick={openSelect} />
-        )}
-      </div>
-      {isOpen ? (
-        <div className="options" ref={ref}>
-          {options.map((label: string) => {
-            return (
-              <span key={label} onClick={() => selectItem(label)}>
-                {label}
+    <StyledInput>
+      <label>{labelText}</label>
+      <OutsideAlerter onclick={() => setIsOpen(false)}>
+        <StyledSelect>
+          <div className="selected">
+            {typeof value !== 'object' ? (
+              <span>
+                {selected[0]?.label
+                  ? selected[0].label
+                  : `Please select ${labelText}`}
               </span>
-            );
-          })}
-        </div>
-      ) : null}
-    </StyledSelect>
+            ) : (
+              <div style={{ display: 'flex' }}>
+                {selected.map((item, i) => {
+                  return (
+                    <span className="selected-list" key={i}>
+                      <p>{item.label}</p>
+                      <CloseSquareFilled
+                        onClick={() => removeItem(item.value)}
+                      />
+                    </span>
+                  );
+                })}
+              </div>
+            )}
+            {disabled ? null : isOpen ? (
+              <CaretUpFilled onClick={openSelect} />
+            ) : (
+              <CaretDownFilled onClick={openSelect} />
+            )}
+          </div>
+          {isOpen ? (
+            <div className="options">
+              {options.map((option) => {
+                return (
+                  <span
+                    key={option.label}
+                    onClick={() => selectItem(option.value)}
+                  >
+                    {option.label}
+                  </span>
+                );
+              })}
+            </div>
+          ) : null}
+        </StyledSelect>
+      </OutsideAlerter>
+    </StyledInput>
   );
 }
 

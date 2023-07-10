@@ -1,3 +1,4 @@
+import { useContext } from 'react';
 import { Formik, ErrorMessage } from 'formik';
 import {
   LoginInitialValues,
@@ -10,8 +11,12 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { StyledForm } from './styled';
 import { StyledErrorMsg } from './styled';
+import { GlobalContext } from '../../context/context';
+import jwt from 'jwt-decode';
+import { SET_USER } from '../../action';
 
 function LoginPage() {
+  const { dispatch }: any = useContext(GlobalContext);
   const navigate = useNavigate();
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -22,11 +27,20 @@ function LoginPage() {
         values,
       );
 
+      const items: {} = jwt(data.access_token);
+      const initialValue = { ...items, image: data.user.image };
+      sessionStorage.setItem('initial_value', JSON.stringify(initialValue));
+
+      dispatch({
+        type: SET_USER,
+        payload: initialValue,
+      });
+
       sessionStorage.setItem('access_token', data.access_token);
 
       navigate('/manage-users');
     } catch (error: any) {
-      const errorText = error.response.data.message;
+      const errorText = error.response?.data?.message;
       if (typeof errorText === 'object') {
         setErrorMsg(errorText[0]);
       } else {

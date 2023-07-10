@@ -36,24 +36,16 @@ export const StyledInput = styled(Col)`
 type InputType = {
   name: string;
   span: number;
+  placeholder?: string;
 };
 
-function CustomInput({ name, span }: InputType) {
-  let tag = name.replace(/\s/g, '');
-  const address = ['blockNumber', 'City', 'Province', 'Street', 'Barangay'];
-
-  if (name.includes('Name')) {
-    tag = `fullName.${tag}`;
-  } else if (address.includes(tag)) {
-    tag = `address.${tag}`;
-  }
-
+function CustomInput({ name, placeholder = '', span }: InputType) {
   return (
     <StyledInput span={span}>
-      <label htmlFor={tag}>{name}</label>
-      <Input size="large" name={tag} placeholder={`${name} here`} />
+      <label htmlFor={name}>{placeholder}</label>
+      <Input size="large" name={name} placeholder={placeholder} />
       <p>
-        <ErrorMessage name={tag} />
+        <ErrorMessage name={name} />
       </p>
     </StyledInput>
   );

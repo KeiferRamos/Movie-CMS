@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Spin, Breadcrumb } from 'antd';
 
 export const StyledContainer = styled.div`
-  min-height: 100vh;
+  height: 100vh;
   width: 100%;
   background: #fff;
   display: grid;
@@ -21,10 +21,12 @@ function Layout({ isSpinning, children, routes }) {
   return (
     <StyledContainer>
       <SideBar />
-      <StyledSpinner size="large" spinning={isSpinning} />
-      <div style={{ padding: 30 }}>
-        <Breadcrumb items={routes} style={{ marginBottom: 20 }} />
-        {!isSpinning ? children : null}
+      <div style={{ height: '100vh', overflow: 'scroll' }}>
+        <StyledSpinner size="large" spinning={isSpinning} />
+        <div style={{ padding: 30 }}>
+          <Breadcrumb items={routes} style={{ marginBottom: 20 }} />
+          {!isSpinning ? children : null}
+        </div>
       </div>
     </StyledContainer>
   );

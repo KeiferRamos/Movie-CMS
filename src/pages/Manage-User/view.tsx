@@ -1,7 +1,6 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import jwt from 'jwt-decode';
 import Layout from '../../layout/main';
 import { ActionBtn, Icons, StyledPageHeader, Info } from './style';
 import {
@@ -15,21 +14,26 @@ import {
   PhoneFilled,
   ExclamationCircleFilled,
   PlaySquareTwoTone,
+  AppstoreAddOutlined,
 } from '@ant-design/icons';
 import { setAddress } from '../../utils/setAdress';
 import { setName } from '../../utils/setName';
-import { Table, Tag, Modal, message, Breadcrumb } from 'antd';
+import { Table, Tag, Modal, message } from 'antd';
 import { PageHeader } from '@ant-design/pro-layout';
 import { initialValues } from './constant';
 import { setConfig } from '../../utils/setConfig';
 import { setTime } from '../../utils/setTime';
+import { GlobalContext } from '../../context/context';
 
 const { confirm } = Modal;
 
 function ViewUser() {
+  const {
+    state: { role, id },
+  }: any = useContext(GlobalContext);
   const [user, setUser] = useState(initialValues);
   const [activities, setActivities] = useState([]);
-  const { id } = useParams();
+  const { id: selectedId } = useParams();
   const navigate = useNavigate();
 
   const getActivity = async () => {
@@ -74,11 +78,20 @@ function ViewUser() {
                 <p>VIEW</p>
               </ActionBtn>
             );
-          default:
-            <ActionBtn>
-              <EditTwoTone />
-              <p>EDIT</p>
-            </ActionBtn>;
+          case 'add':
+            return (
+              <ActionBtn>
+                <AppstoreAddOutlined twoToneColor="#eaac0f" />
+                <p>ADD</p>
+              </ActionBtn>
+            );
+          case 'update':
+            return (
+              <ActionBtn>
+                <EditTwoTone />
+                <p>EDIT</p>
+              </ActionBtn>
+            );
         }
       },
     },
@@ -105,7 +118,7 @@ function ViewUser() {
 
   const getUser = async () => {
     const { data } = await axios.get(
-      `http://localhost:3001/users/${id}`,
+      `http://localhost:3001/users/${selectedId}`,
       setConfig(),
     );
     return data;
@@ -117,6 +130,13 @@ function ViewUser() {
       setConfig(),
     );
 
+    await axios.post(`http://localhost:3001/activities`, {
+      type: 'user',
+      id: id,
+      user: id,
+      summary: `deleted user with id ${user._id}`,
+      action: 'delete',
+    });
     return data;
   };
 
@@ -130,8 +150,7 @@ function ViewUser() {
             message.success(
               `successfully deleted user with username ${response.username}`,
             );
-            const token = sessionStorage.getItem('access_token');
-            const { id }: any = jwt(token);
+
             if (id === response.id) {
               sessionStorage.clear();
               return navigate('/login');
@@ -154,7 +173,36 @@ function ViewUser() {
     },
   ];
 
+  const extras = () => {
+    const actionItems = [];
+
+    if (id === user._id) {
+      actionItems.push(
+        <ActionBtn
+          onClick={() => {
+            navigate(`/manage-users/edit/${user._id}`);
+          }}
+        >
+          <EditTwoTone />
+          <p>Edit User</p>
+        </ActionBtn>,
+      );
+    }
+
+    if (role === 'administrator' || id === user._id) {
+      actionItems.push(
+        <ActionBtn onClick={deleteUser}>
+          <DeleteTwoTone twoToneColor={'#f7078b'} />
+          <p>Delete User</p>
+        </ActionBtn>,
+      );
+    }
+
+    return actionItems;
+  };
+
   useEffect(() => {
+    setUser(initialValues);
     getUser()
       .then((data) => {
         setUser(data);
@@ -170,22 +218,9 @@ function ViewUser() {
         title={user.username}
         subTitle={setName(user.fullName)}
         tags={<Tag color="#f56fb9">{user.role}</Tag>}
-        extra={[
-          <ActionBtn onClick={deleteUser}>
-            <DeleteTwoTone twoToneColor={'#f7078b'} />
-            <p>Delete User</p>
-          </ActionBtn>,
-          <ActionBtn
-            onClick={() => {
-              navigate(`/manage-users/edit/${user._id}`);
-            }}
-          >
-            <EditTwoTone />
-            <p>Edit User</p>
-          </ActionBtn>,
-        ]}
+        extra={extras()}
         avatar={{
-          src: user.image.data,
+          src: user.image,
         }}
       >
         <div style={{ padding: '0 10px' }}>

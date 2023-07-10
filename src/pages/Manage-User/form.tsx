@@ -56,11 +56,11 @@ function Form() {
         {
           title: <Link to="/manage-users">Manage User</Link>,
         },
-        {
+        id && {
           title: <Link to={`/manage-users/${user._id}`}>{user.username}</Link>,
         },
         {
-          title: <p>Edit</p>,
+          title: <p>{id ? 'Edit' : 'Add'}</p>,
         },
       ]}
     >
@@ -79,37 +79,72 @@ function Form() {
                     onchange={(value) => setFieldValue('image', value)}
                   ></UploadImage>
                 </Col>
-
                 <Col span={18}>
                   <Row gutter={20}>
-                    <CustomInput name="username" span={12} />
-                    <StyledInput span={12}>
-                      <label htmlFor="role">Role</label>
+                    <CustomInput
+                      name="username"
+                      placeholder="Username"
+                      span={12}
+                    />
+                    <Col span={12}>
                       <Select
+                        labelText={'Role'}
                         options={RoleOptions}
                         disabled={true}
                         onClick={(value) => setFieldValue('role', value)}
                         value={values.role}
                       ></Select>
-                    </StyledInput>
+                    </Col>
                   </Row>
                   <Row gutter={20} style={{ marginBottom: 10 }}>
-                    <CustomInput name="email" span={12} />
-                    <CustomInput name="contact Number" span={12} />
+                    <CustomInput name="email" placeholder="Email" span={12} />
+                    <CustomInput
+                      name="contactNumber"
+                      placeholder="Contact Number"
+                      span={12}
+                    />
                   </Row>
                   <Row gutter={20}>
-                    <CustomInput span={8} name="first Name" />
-                    <CustomInput span={8} name="middle Name" />
-                    <CustomInput span={8} name="last Name" />
+                    <CustomInput
+                      span={8}
+                      name="fullName.firstName"
+                      placeholder="First Name"
+                    />
+                    <CustomInput
+                      span={8}
+                      name="fullName.middle Name"
+                      placeholder="Middle Name"
+                    />
+                    <CustomInput
+                      span={8}
+                      name="fullName.last Name"
+                      placeholder="Last Name"
+                    />
                   </Row>
                 </Col>
               </Row>
               <Row style={{ marginTop: 10 }} gutter={15}>
-                <CustomInput name="block Number" span={4} />
-                <CustomInput name="Street" span={5} />
-                <CustomInput name="Barangay" span={5} />
-                <CustomInput name="City" span={5} />
-                <CustomInput name="Province" span={5} />
+                <CustomInput
+                  name="address.blockNumber"
+                  placeholder="Block Number"
+                  span={4}
+                />
+                <CustomInput
+                  name="address.Street"
+                  placeholder="Street"
+                  span={5}
+                />
+                <CustomInput
+                  name="address.Barangay"
+                  placeholder="Barangay"
+                  span={5}
+                />
+                <CustomInput name="address.City" placeholder="City" span={5} />
+                <CustomInput
+                  name="address.Province"
+                  placeholder="Province"
+                  span={5}
+                />
               </Row>
               <Row>
                 <Richtext

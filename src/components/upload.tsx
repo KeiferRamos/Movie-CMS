@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import NoImageIcon from '../global/images/no-picture-taking.png';
 import { ErrorMessage } from 'formik';
@@ -24,10 +24,10 @@ const StyledUpload = styled.div`
 
   .image-container {
     border: 3px dashed #bebebe;
-    height: 200px;
     width: 100%;
     display: grid;
     place-items: center;
+    position: relative;
 
     &-icon {
       width: 60px;
@@ -35,8 +35,11 @@ const StyledUpload = styled.div`
     }
 
     &-profile {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
-      height: calc(200px - 6px);
+      height: 100%;
       object-fit: cover;
     }
   }
@@ -45,34 +48,36 @@ const StyledUpload = styled.div`
 function Upload({ onchange, value }) {
   const [image, setImage] = useState<any>(value);
 
+  useEffect(() => {
+    setImage(value);
+  }, [value]);
+
   function previewFile({ target: { files } }) {
     const file = files[0];
 
+    const getResult = () => {
+      onchange(reader.result);
+    };
+
     const reader = new FileReader();
-    reader.addEventListener(
-      'load',
-      () => {
-        const value = { data: reader.result, name: files[0].name };
-        setImage(value);
-        onchange(value);
-      },
-      false,
-    );
+    reader.addEventListener('load', getResult, false);
+
     if (file) {
       reader.readAsDataURL(file);
     }
+
+    return () => reader.removeEventListener('load', getResult, false);
   }
 
   return (
     <StyledUpload>
       <div className="image-container">
-        {image?.data ? (
-          <img className="image-container-profile" src={image.data} alt="" />
+        {image ? (
+          <img className="image-container-profile" src={image} alt="" />
         ) : (
           <img className="image-container-icon" src={NoImageIcon} />
         )}
       </div>
-      <span>{image.name}</span>
       <input type="file" onChange={(e) => previewFile(e)} />
     </StyledUpload>
   );

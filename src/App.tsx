@@ -1,11 +1,12 @@
 import RoutesPage from './routes';
 import './global/global.css';
+import Context from './context/context';
 
 function App() {
   return (
-    <div className="App">
+    <Context>
       <RoutesPage></RoutesPage>
-    </div>
+    </Context>
   );
 }
 

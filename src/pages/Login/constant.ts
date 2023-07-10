@@ -42,4 +42,8 @@ export type RegisterInputType = {
   role: string;
 };
 
-export const RoleOptions = ['administrator', 'manager', 'developer'];
+export const RoleOptions = [
+  { label: 'Administrator', value: 'administrator' },
+  { label: 'Manager', value: 'manager' },
+  { label: 'Developer', value: 'developer' },
+];

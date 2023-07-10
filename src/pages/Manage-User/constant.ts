@@ -18,10 +18,7 @@ export const ValidationSchema = yup.object().shape({
     blockNumber: yup.string().required('this field is required!'),
     Street: yup.string().required('this field is required!'),
   }),
-  image: yup.object().shape({
-    name: yup.string().required('this field is required!'),
-    data: yup.string().required('this field is required!'),
-  }),
+  image: yup.string().required('this field is required!'),
 });
 
 export const initialValues = {
@@ -43,8 +40,5 @@ export const initialValues = {
     blockNumber: '',
     Street: '',
   },
-  image: {
-    name: '',
-    data: '',
-  },
+  image: '',
 };

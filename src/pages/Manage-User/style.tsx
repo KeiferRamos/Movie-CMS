@@ -16,6 +16,15 @@ export const StyledPageHeader = styled(PageHeader)`
   }
 `;
 
+export const StyledActions = styled.div`
+  display: flex;
+  gap: 10px;
+
+  svg {
+    font-size: 18px;
+  }
+`;
+
 export const MenuItem = styled.div`
   display: flex;
   align-items: center;

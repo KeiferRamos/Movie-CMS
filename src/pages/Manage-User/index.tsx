@@ -1,33 +1,27 @@
 import axios from 'axios';
 import Layout from '../../layout/main';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import {
   EditTwoTone,
   DeleteTwoTone,
   PlaySquareTwoTone,
   ExclamationCircleFilled,
 } from '@ant-design/icons';
-import { styled } from 'styled-components';
 import { Link } from 'react-router-dom';
-import jwt from 'jwt-decode';
 import { Modal, message } from 'antd';
 import { setAddress } from '../../utils/setAdress';
 import { setConfig } from '../../utils/setConfig';
 import CustomTable from '../../components/table';
-
-const StyledActions = styled.div`
-  display: flex;
-  gap: 10px;
-
-  svg {
-    font-size: 18px;
-  }
-`;
+import { StyledActions } from './style';
+import { GlobalContext } from '../../context/context';
 
 function ManageUser() {
   const [data, setData] = useState([]);
   const [list, setList] = useState([]);
   const [fetch, setFetch] = useState(true);
+  const {
+    state: { id, role },
+  }: any = useContext(GlobalContext);
 
   const columns = [
     {
@@ -70,13 +64,7 @@ function ManageUser() {
       title: 'Action',
       key: 'action',
       render: (_, record) => {
-        const token: any = jwt(sessionStorage.getItem('access_token'));
-
         const deleteUser = async () => {
-          const { id, username }: any = jwt(
-            sessionStorage.getItem('access_token'),
-          );
-
           await axios.delete(
             `http://localhost:3001/users/${record._id}`,
             setConfig(),
@@ -86,19 +74,19 @@ function ManageUser() {
             type: 'user',
             action: 'delete',
             user: id,
-            summary: `You deleted user with id ${record._id}`,
+            summary: `deleted user with id ${record._id}`,
             id: record._id,
           });
         };
 
         return (
           <StyledActions>
-            {token.id === record._id ? (
+            {id === record._id ? (
               <Link to={`/manage-users/edit/${record._id}`}>
                 <EditTwoTone />
               </Link>
             ) : null}
-            {token.role === 'administrator' || token.id === record._id ? (
+            {role === 'administrator' || id === record._id ? (
               <DeleteTwoTone
                 twoToneColor="#eb2f96"
                 onClick={() =>
@@ -115,8 +103,7 @@ function ManageUser() {
                 }
               />
             ) : null}
-            {(token.role === 'administrator' || token.id === record._id) &&
-            record.bio ? (
+            {record.bio ? (
               <Link to={`/manage-users/${record._id}`}>
                 <PlaySquareTwoTone twoToneColor="#52c41a" />
               </Link>
@@ -128,11 +115,7 @@ function ManageUser() {
   ];
 
   const getAllUsers = async () => {
-    const token = sessionStorage.getItem('access_token');
-
-    const { data } = await axios.get('http://localhost:3001/users', {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const { data } = await axios.get('http://localhost:3001/users');
     return data;
   };
 
@@ -192,7 +175,7 @@ function ManageUser() {
       isSpinning={!list.length}
       routes={[
         {
-          title: <Link to="/manage-users">Manage User</Link>,
+          title: 'Manage User',
         },
       ]}
     >
