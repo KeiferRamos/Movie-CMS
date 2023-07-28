@@ -15,6 +15,7 @@ import {
   PlaySquareTwoTone,
 } from '@ant-design/icons';
 import { GlobalContext } from '../../context/context';
+import { deleteMovieById, getAllMovies } from '../../api/movies';
 
 function ManageMovies() {
   const [movies, setMovies] = useState([]);
@@ -22,18 +23,8 @@ function ManageMovies() {
     state: { username },
   }: any = useContext(GlobalContext);
   const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState([]);
   const [fetch, setFetch] = useState(true);
   const navigate = useNavigate();
-
-  const getAllMovies = async () => {
-    const { data } = await axios.get(
-      'http://localhost:3001/movies',
-      setConfig(),
-    );
-
-    return data;
-  };
 
   useEffect(() => {
     if (fetch) {
@@ -41,16 +32,11 @@ function ManageMovies() {
         .then((data) => {
           setMovies(data);
           setIsLoading(false);
-          setData(data);
           setFetch(false);
         })
         .catch((err) => console.log(err));
     }
   }, [fetch]);
-
-  const onSearch = (value) => {
-    console.log(value);
-  };
 
   return (
     <Layout
@@ -90,18 +76,7 @@ function ManageMovies() {
                     return Modal.confirm({
                       title: 'Are you sure you want to delete this Item?',
                       onOk: async () => {
-                        await axios.delete(
-                          `http://localhost:3001/movies/${_id}`,
-                          setConfig(),
-                        );
-
-                        await axios.post(`http://localhost:3001/activities`, {
-                          type: 'movie',
-                          id: movie._id,
-                          user: username,
-                          summary: `You added item from movie list`,
-                          action: 'Add',
-                        });
+                        await deleteMovieById(username, _id, movie);
 
                         setFetch(true);
                         message.success('item deleted successfully');

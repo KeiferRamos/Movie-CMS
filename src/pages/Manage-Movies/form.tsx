@@ -14,6 +14,8 @@ import Richtext from '../../components/richtext';
 import { StyledCheckbox, UploadContainer } from './styled';
 import Cast from '../../components/castform';
 import { GlobalContext } from '../../context/context';
+import { createMovie, editMovie, getAllMovies } from '../../api/movies';
+import { getAllMovieGenres } from '../../api/genres';
 
 function Forms() {
   const [movies, setMovies] = useState([]);
@@ -25,11 +27,8 @@ function Forms() {
   const { id }: any = useParams();
 
   const getAllMovie = async () => {
-    const { data } = await axios.get(
-      `http://localhost:3001/movies`,
-      setConfig(),
-    );
-    const { data: genreList } = await axios.get('http://localhost:3001/genres');
+    const data = await getAllMovies();
+    const genreList = await getAllMovieGenres();
 
     const mappedList = genreList.map(({ name }) => name);
 
@@ -75,35 +74,11 @@ function Forms() {
 
   const submitForm = async (values) => {
     if (id) {
-      await axios.put(
-        `http://localhost:3001/movies/${values._id}`,
-        values,
-        setConfig(),
-      );
-
-      await axios.post(`http://localhost:3001/activities`, {
-        type: 'movie',
-        id: id,
-        user: state.id,
-        summary: `updated movie with id ${id}`,
-        action: 'update',
-      });
+      await editMovie(values, id, state);
 
       message.success('item updated successfully');
     } else {
-      await axios.post(
-        `http://localhost:3001/movies/create`,
-        values,
-        setConfig(),
-      );
-
-      await axios.post(`http://localhost:3001/activities`, {
-        type: 'movie',
-        id: id,
-        user: state.id,
-        summary: `added item from movie list`,
-        action: 'Add',
-      });
+      await createMovie(values, id, state);
 
       message.success('item added successfully');
     }

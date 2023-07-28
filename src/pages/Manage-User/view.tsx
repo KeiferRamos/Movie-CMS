@@ -24,6 +24,7 @@ import { initialValues } from './constant';
 import { setConfig } from '../../utils/setConfig';
 import { setTime } from '../../utils/setTime';
 import { GlobalContext } from '../../context/context';
+import { deleteUserById, getUser } from '../../api/users';
 
 const { confirm } = Modal;
 
@@ -116,36 +117,12 @@ function ViewUser() {
     },
   ];
 
-  const getUser = async () => {
-    const { data } = await axios.get(
-      `http://localhost:3001/users/${selectedId}`,
-      setConfig(),
-    );
-    return data;
-  };
-
-  const deleteUserById = async () => {
-    const { data } = await axios.delete(
-      `http://localhost:3001/users/${user._id}`,
-      setConfig(),
-    );
-
-    await axios.post(`http://localhost:3001/activities`, {
-      type: 'user',
-      id: id,
-      user: id,
-      summary: `deleted user with id ${user._id}`,
-      action: 'delete',
-    });
-    return data;
-  };
-
   const deleteUser = () => {
     confirm({
       title: 'Are you sure you want to delete this user?',
       icon: <ExclamationCircleFilled />,
       onOk() {
-        deleteUserById()
+        deleteUserById(id)
           .then((response) => {
             message.success(
               `successfully deleted user with username ${response.username}`,
@@ -203,7 +180,7 @@ function ViewUser() {
 
   useEffect(() => {
     setUser(initialValues);
-    getUser()
+    getUser(id)
       .then((data) => {
         setUser(data);
       })

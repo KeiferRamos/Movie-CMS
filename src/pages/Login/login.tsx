@@ -14,6 +14,7 @@ import { StyledErrorMsg } from './styled';
 import { GlobalContext } from '../../context/context';
 import jwt from 'jwt-decode';
 import { SET_USER } from '../../action';
+import { createUser } from '../../api/users';
 
 function LoginPage() {
   const { dispatch }: any = useContext(GlobalContext);
@@ -22,10 +23,7 @@ function LoginPage() {
 
   const submitForm = async (values: LoginInputType) => {
     try {
-      const { data } = await axios.post(
-        'http://localhost:3001/users/login',
-        values,
-      );
+      const data = await createUser(values);
 
       const items: {} = jwt(data.access_token);
       const initialValue = { ...items, image: data.user.image };

@@ -5,21 +5,17 @@ import { StyledButton, StyledGenre } from './style';
 import { Dropdown, Modal, message } from 'antd';
 import { Link } from 'react-router-dom';
 import { PlusOutlined, EditTwoTone, DeleteTwoTone } from '@ant-design/icons';
+import { deleteGenre, getAllMovieGenres } from '../../api/genres';
 
 function GenreList() {
   const [genre, setGenre] = useState([]);
   const [fetch, setFetch] = useState(true);
 
-  const getAllGenre = async () => {
-    const { data } = await axios.get('http://localhost:3001/genres');
-    return data;
-  };
-
   const deleteGenreById = async (id) => {
     Modal.confirm({
       title: 'Are you sure you want to delete this item?',
       onOk: async () => {
-        await axios.delete(`http://localhost:3001/genres/${id}`);
+        await deleteGenre(id);
         setFetch(true);
         message.success('Genre Deleted Successfully');
       },
@@ -28,7 +24,7 @@ function GenreList() {
 
   useEffect(() => {
     if (fetch) {
-      getAllGenre()
+      getAllMovieGenres()
         .then((response) => {
           setGenre(response);
           setFetch(false);

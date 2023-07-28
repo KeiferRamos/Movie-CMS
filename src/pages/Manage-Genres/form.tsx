@@ -9,28 +9,26 @@ import Upload from '../../components/upload';
 import { UploadContainer } from './style';
 import axios from 'axios';
 import CustomInput from '../../components/input';
+import { createGenre, editGenre, getGenreById } from '../../api/genres';
 
 function Forms() {
   const [genre, setGenre] = useState(initialValues);
   const { id }: any = useParams();
 
-  const getGenreById = async () => {
-    const { data } = await axios.get(`http://localhost:3001/genres/${id}`);
-    setGenre(data);
-  };
-
   useEffect(() => {
     if (id) {
-      getGenreById();
+      getGenreById(id).then((data) => {
+        setGenre(data);
+      });
     }
   }, []);
 
   const submitForm = async (values) => {
     if (id) {
-      await axios.put(`http://localhost:3001/genres/${id}`, values);
+      await editGenre(id, values);
       message.success('item updated successfully');
     } else {
-      await axios.post(`http://localhost:3001/genres`, values);
+      await createGenre(values);
       message.success('item added successfully');
     }
   };

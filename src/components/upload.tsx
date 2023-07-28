@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import NoImageIcon from '../global/images/no-picture-taking.png';
 import { ErrorMessage } from 'formik';
+import { LoadingOutlined } from '@ant-design/icons';
+import { storage } from '../firebase';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 const StyledUpload = styled.div`
   background: #faf7f7;
@@ -12,6 +15,10 @@ const StyledUpload = styled.div`
   flex-direction: column;
   justify-content: center;
   gap: 5px;
+
+  svg {
+    font-size: 30px;
+  }
 
   input[type='file']::file-selector-button {
     background: #25a5dd;
@@ -47,38 +54,42 @@ const StyledUpload = styled.div`
 
 function Upload({ onchange, value }) {
   const [image, setImage] = useState<any>(value);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     setImage(value);
   }, [value]);
 
   function previewFile({ target: { files } }) {
-    const file = files[0];
-
-    const getResult = () => {
-      onchange(reader.result);
-    };
-
-    const reader = new FileReader();
-    reader.addEventListener('load', getResult, false);
-
-    if (file) {
-      reader.readAsDataURL(file);
+    if (files) {
+      setUploading(true);
+      const file = files[0];
+      const imgRef = ref(storage, file.name);
+      uploadBytes(imgRef, file).then((res) => {
+        getDownloadURL(res.ref).then((url) => {
+          onchange(url);
+          setUploading(false);
+        });
+      });
     }
-
-    return () => reader.removeEventListener('load', getResult, false);
   }
 
   return (
     <StyledUpload>
       <div className="image-container">
-        {image ? (
+        {uploading ? (
+          <LoadingOutlined />
+        ) : image ? (
           <img className="image-container-profile" src={image} alt="" />
         ) : (
           <img className="image-container-icon" src={NoImageIcon} />
         )}
       </div>
-      <input type="file" onChange={(e) => previewFile(e)} />
+      <input
+        type="file"
+        accept=".png, .jpg, .jpeg"
+        onChange={(e) => previewFile(e)}
+      />
     </StyledUpload>
   );
 }

@@ -13,6 +13,7 @@ import {
 import { Carousel, Empty } from 'antd';
 import { CaretLeftFilled, CaretRightFilled } from '@ant-design/icons';
 import NoImageIcon from '../../global/images/no-picture-taking.png';
+import { getMovie } from '../../api/movies';
 
 const ArrowNext = (props) => {
   return (
@@ -35,15 +36,6 @@ function ViewMovie() {
   const [fetch, setFetch] = useState(true);
   const { id }: any = useParams();
 
-  const getMovie = async () => {
-    const { data } = await axios.get(
-      `http://localhost:3001/movies/${id}`,
-      setConfig(),
-    );
-
-    return data;
-  };
-
   const settings = {
     slidesToShow: 1,
     arrows: true,
@@ -53,7 +45,7 @@ function ViewMovie() {
 
   useEffect(() => {
     if (fetch) {
-      getMovie().then((data) => {
+      getMovie(id).then((data) => {
         console.log(data);
         setMovie(data);
         setFetch(false);

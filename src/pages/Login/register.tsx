@@ -12,6 +12,7 @@ import { Input, SubmitButton } from 'formik-antd';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Select from '../../components/select';
+import { register } from '../../api/users';
 
 function RegisterPage() {
   const [msg, setMsg] = useState('');
@@ -19,10 +20,7 @@ function RegisterPage() {
 
   const submitForm = async (values: RegisterInputType) => {
     try {
-      const { data } = await axios.post(
-        'http://localhost:3001/users/register',
-        values,
-      );
+      const data = await register(values);
       message.success(data.message);
       navigate('/login');
     } catch (error: any) {

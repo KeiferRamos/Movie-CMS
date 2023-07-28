@@ -1,35 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Formik, ErrorMessage } from 'formik';
+import { Formik } from 'formik';
 import { Row, Col } from 'antd';
 import Richtext from '../../components/richtext';
 import Select from '../../components/select';
 import { ValidationSchema, initialValues } from './constant';
 import { Form as CreateForm, SubmitButton } from 'formik-antd';
 import UploadImage from '../../components/upload';
-import CustomInput, { StyledInput } from '../../components/input';
-import axios from 'axios';
-import { setConfig } from '../../utils/setConfig';
+import CustomInput from '../../components/input';
 import { useParams } from 'react-router-dom';
 import Layout from '../../layout/main';
 import { RoleOptions } from '../Login/constant';
+import { editUser, getUser } from '../../api/users';
+import { UploadContainer } from '../Manage-Movies/styled';
 
 function Form() {
   const { id }: any = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(initialValues);
 
-  const getUser = async () => {
-    const { data } = await axios.get(
-      `http://localhost:3001/users/${id}`,
-      setConfig(),
-    );
-
-    return data;
-  };
-
   useEffect(() => {
-    getUser().then((data: any) => {
+    getUser(id).then((data: any) => {
       setUser(Object.assign(initialValues, data));
       setIsLoading(false);
     });
@@ -37,11 +28,7 @@ function Form() {
 
   const submitForm = async (values) => {
     try {
-      const { data } = await axios.put(
-        `http://localhost:3001/users/${values._id}`,
-        values,
-        setConfig(),
-      );
+      const data = await editUser(values);
 
       setUser(data);
     } catch (error) {
@@ -70,15 +57,16 @@ function Form() {
         validationSchema={ValidationSchema}
       >
         {({ setFieldValue, values, dirty, isValid }) => {
+          console.log(values.image);
           return (
             <CreateForm>
               <Row gutter={20}>
-                <Col span={6}>
+                <UploadContainer span={6}>
                   <UploadImage
                     value={values.image}
                     onchange={(value) => setFieldValue('image', value)}
                   ></UploadImage>
-                </Col>
+                </UploadContainer>
                 <Col span={18}>
                   <Row gutter={20}>
                     <CustomInput

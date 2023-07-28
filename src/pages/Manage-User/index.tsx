@@ -10,10 +10,10 @@ import {
 import { Link } from 'react-router-dom';
 import { Modal, message } from 'antd';
 import { setAddress } from '../../utils/setAdress';
-import { setConfig } from '../../utils/setConfig';
 import CustomTable from '../../components/table';
 import { StyledActions } from './style';
 import { GlobalContext } from '../../context/context';
+import { deleteUserById, getAllUsers } from '../../api/users';
 
 function ManageUser() {
   const [data, setData] = useState([]);
@@ -64,21 +64,6 @@ function ManageUser() {
       title: 'Action',
       key: 'action',
       render: (_, record) => {
-        const deleteUser = async () => {
-          await axios.delete(
-            `http://localhost:3001/users/${record._id}`,
-            setConfig(),
-          );
-
-          await axios.post(`http://localhost:3001/activities`, {
-            type: 'user',
-            action: 'delete',
-            user: id,
-            summary: `deleted user with id ${record._id}`,
-            id: record._id,
-          });
-        };
-
         return (
           <StyledActions>
             {id === record._id ? (
@@ -93,11 +78,10 @@ function ManageUser() {
                   Modal.confirm({
                     title: 'Are you sure you want to delete this user?',
                     icon: <ExclamationCircleFilled />,
-                    onOk: () => {
-                      deleteUser().then(() => {
-                        message.success('user deleted successfully!');
-                        setFetch(true);
-                      });
+                    onOk: async () => {
+                      await deleteUserById(record._id);
+                      message.success('user deleted successfully!');
+                      setFetch(true);
                     },
                   })
                 }
@@ -113,11 +97,6 @@ function ManageUser() {
       },
     },
   ];
-
-  const getAllUsers = async () => {
-    const { data } = await axios.get('http://localhost:3001/users');
-    return data;
-  };
 
   useEffect(() => {
     if (fetch) {
