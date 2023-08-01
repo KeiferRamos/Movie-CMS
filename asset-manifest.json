@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/static/css/main.b58ca847.css",
-    "main.js": "/static/js/main.b2310d83.js",
-    "static/media/login.jpg": "/static/media/login.4104c64468d948da2d2a.jpg",
-    "static/media/no-picture-taking.png": "/static/media/no-picture-taking.60a688e3706e621598f8.png",
-    "static/media/plus.png": "/static/media/plus.219aba75e6171a00de8a.png",
-    "index.html": "/index.html",
-    "main.b58ca847.css.map": "/static/css/main.b58ca847.css.map",
-    "main.b2310d83.js.map": "/static/js/main.b2310d83.js.map"
+    "main.css": "/Movie-CMS/static/css/main.1f324728.css",
+    "main.js": "/Movie-CMS/static/js/main.3431c4b7.js",
+    "static/media/login.jpg": "/Movie-CMS/static/media/login.4104c64468d948da2d2a.jpg",
+    "static/media/no-picture-taking.png": "/Movie-CMS/static/media/no-picture-taking.60a688e3706e621598f8.png",
+    "static/media/plus.png": "/Movie-CMS/static/media/plus.219aba75e6171a00de8a.png",
+    "index.html": "/Movie-CMS/index.html",
+    "main.1f324728.css.map": "/Movie-CMS/static/css/main.1f324728.css.map",
+    "main.3431c4b7.js.map": "/Movie-CMS/static/js/main.3431c4b7.js.map"
   },
   "entrypoints": [
-    "static/css/main.b58ca847.css",
-    "static/js/main.b2310d83.js"
+    "static/css/main.1f324728.css",
+    "static/js/main.3431c4b7.js"
   ]
 }
