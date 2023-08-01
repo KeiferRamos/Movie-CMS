@@ -2,6 +2,7 @@
   "name": "movie-cms",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://keiferramos.github.io",
   "dependencies": {
     "@ant-design/icons": "^5.1.4",
     "@ant-design/pro-layout": "^7.15.2",
