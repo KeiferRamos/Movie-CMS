@@ -65,3 +65,11 @@ export const getMovie = async (id) => {
 
   return data;
 };
+
+export const getSimilar = async (id: string) => {
+  const { data } = await axios.get(
+    `${process.env.REACT_APP_BASE_URL}/movies/similar/${id}`,
+  );
+
+  return data;
+};

@@ -14,63 +14,40 @@ import Richtext from '../../components/richtext';
 import { StyledCheckbox, UploadContainer } from './styled';
 import Cast from '../../components/castform';
 import { GlobalContext } from '../../context/context';
-import { createMovie, editMovie, getAllMovies } from '../../api/movies';
+import {
+  createMovie,
+  editMovie,
+  getAllMovies,
+  getMovie,
+  getSimilar,
+} from '../../api/movies';
 import { getAllMovieGenres } from '../../api/genres';
 
 function Forms() {
-  const [movies, setMovies] = useState([]);
   const [genres, setGenres] = useState([]);
   const [similarOptions, setSimilarOptions] = useState([]);
   const [movie, setMovie] = useState<any>(initialValues);
-  const [fetch, setFetch] = useState(true);
   const { state }: any = useContext(GlobalContext);
   const { id }: any = useParams();
 
-  const getAllMovie = async () => {
-    const data = await getAllMovies();
-    const genreList = await getAllMovieGenres();
-
-    const mappedList = genreList.map(({ name }) => name);
-
-    return { movies: data, genres: mappedList };
-  };
-
   useEffect(() => {
-    if (fetch) {
-      getAllMovie().then(({ movies, genres }) => {
-        setMovies(movies);
-        setGenres(genres);
-        setFetch(false);
-      });
-    }
-  }, [fetch]);
+    const similars = getSimilar(id);
+    const selectedMovie = getMovie(id);
+    const genres = getAllMovieGenres();
 
-  useEffect(() => {
-    if (movies.length) {
-      if (id) {
-        setMovie(movies.find(({ _id }) => _id === id));
-      }
-      setSimilarOptions(
-        movies
-          .filter((item) => {
-            if (id) {
-              return id !== item._id;
-            } else {
-              return item;
-            }
-          })
-          .map(({ title, image }) => {
-            return {
-              label: title,
-              value: {
-                image,
-                title,
-              },
-            };
+    Promise.all([similars, selectedMovie, genres]).then(
+      ([similars, selectedMovie, genres]) => {
+        setMovie(selectedMovie);
+        setGenres(genres.map(({ name }) => name));
+        setSimilarOptions(
+          similars.map((similar) => {
+            const { _id, ...rest } = similar;
+            return { label: similar.title, value: { ...rest, movieId: _id } };
           }),
-      );
-    }
-  }, [movies]);
+        );
+      },
+    );
+  }, []);
 
   const submitForm = async (values) => {
     if (id) {
