@@ -1,10 +1,8 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Layout from '../../layout/main';
 import { Link, useParams } from 'react-router-dom';
-import axios from 'axios';
-import { setConfig } from '../../utils/setConfig';
-import { ValidationSchema, genreOptions, initialValues } from './constant';
-import { Row, Col, Checkbox, message } from 'antd';
+import { ValidationSchema, initialValues } from './constant';
+import { Row, Col, message } from 'antd';
 import Upload from '../../components/upload';
 import { Formik } from 'formik';
 import CustomInput from '../../components/input';
@@ -31,18 +29,24 @@ function Forms() {
   const { id }: any = useParams();
 
   useEffect(() => {
-    const similars = getSimilar(id);
-    const selectedMovie = getMovie(id);
+    const similars = id ? getSimilar(id) : getAllMovies();
+
+    const selectedMovie = id ? getMovie(id) : null;
     const genres = getAllMovieGenres();
 
     Promise.all([similars, selectedMovie, genres]).then(
       ([similars, selectedMovie, genres]) => {
-        setMovie(selectedMovie);
+        if (id) {
+          setMovie(selectedMovie);
+        }
         setGenres(genres.map(({ name }) => name));
         setSimilarOptions(
           similars.map((similar) => {
             const { _id, ...rest } = similar;
-            return { label: similar.title, value: { ...rest, movieId: _id } };
+            return {
+              label: similar.title,
+              value: { ...rest, movieId: _id },
+            };
           }),
         );
       },

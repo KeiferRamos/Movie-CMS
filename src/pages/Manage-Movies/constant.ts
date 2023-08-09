@@ -28,24 +28,3 @@ export const initialValues = {
   },
   featured: false,
 };
-
-export const genreOptions = [
-  'action',
-  'drama',
-  'romance',
-  'war',
-  'adventure',
-  'horror',
-  'comedy',
-  'fantasy',
-  'science fiction',
-  'musical',
-  'mystery',
-  'crime',
-  'sports',
-  'animated',
-  'thriller',
-  'history',
-  'martial arts',
-  'disaster',
-];
