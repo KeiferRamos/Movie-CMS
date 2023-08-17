@@ -52,7 +52,7 @@ const StyledUpload = styled.div`
   }
 `;
 
-function Upload({ onchange, value }) {
+function Upload({ onchange, value, style = {} }) {
   const [image, setImage] = useState<any>(value);
   const [uploading, setUploading] = useState(false);
 
@@ -75,7 +75,7 @@ function Upload({ onchange, value }) {
   }
 
   return (
-    <StyledUpload>
+    <StyledUpload style={style}>
       <div className="image-container">
         {uploading ? (
           <LoadingOutlined />

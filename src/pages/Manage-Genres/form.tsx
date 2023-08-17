@@ -7,7 +7,6 @@ import { initialValues } from './constant';
 import { Row, Col, message } from 'antd';
 import Upload from '../../components/upload';
 import { UploadContainer } from './style';
-import axios from 'axios';
 import CustomInput from '../../components/input';
 import { createGenre, editGenre, getGenreById } from '../../api/genres';
 
@@ -60,27 +59,41 @@ function Forms() {
                 </UploadContainer>
               </Row>
               <br />
-              <Row>
-                <CustomInput name="name" placeholder="title here" span={24} />
-              </Row>
-              <br />
-              <Row>
-                <h3
-                  style={{
-                    color: '#547ceb',
-                    fontWeight: '400',
-                    marginBottom: 10,
-                  }}
-                >
-                  Description
-                </h3>
-                <Input.TextArea
-                  name="description"
-                  placeholder="description here..."
-                  autoSize={{
-                    minRows: 6,
-                  }}
-                ></Input.TextArea>
+              <Row gutter={10}>
+                <UploadContainer span={6}>
+                  <Upload
+                    style={{ height: '280px' }}
+                    value={values.icon}
+                    onchange={(value) => setFieldValue('icon', value)}
+                  />
+                </UploadContainer>
+                <Col span={18}>
+                  <Row>
+                    <CustomInput
+                      name="name"
+                      placeholder="title here"
+                      span={24}
+                    />
+                  </Row>
+                  <Row>
+                    <h3
+                      style={{
+                        color: '#547ceb',
+                        fontWeight: '400',
+                        marginBottom: 10,
+                      }}
+                    >
+                      Description
+                    </h3>
+                    <Input.TextArea
+                      name="description"
+                      placeholder="description here..."
+                      autoSize={{
+                        minRows: 6,
+                      }}
+                    ></Input.TextArea>
+                  </Row>
+                </Col>
               </Row>
               <br />
               <SubmitButton>{id ? 'save' : 'add'}</SubmitButton>

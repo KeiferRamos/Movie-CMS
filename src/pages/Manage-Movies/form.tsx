@@ -54,8 +54,15 @@ function Forms() {
   }, []);
 
   const submitForm = async (values) => {
+    const { similar, ...rest } = values;
+
+    const similarTitles = similarOptions.map(({ label }) => label);
+    const similarItems = values.similar.filter(({ title }) =>
+      similarTitles.includes(title),
+    );
+
     if (id) {
-      await editMovie(values, id, state);
+      await editMovie({ similar: similarItems, ...rest }, id, state);
 
       message.success('item updated successfully');
     } else {
