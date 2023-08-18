@@ -54,7 +54,7 @@ function Forms() {
   }, []);
 
   const submitForm = async (values) => {
-    const { similar, ...rest } = values;
+    const { similar, rank, year, ...rest } = values;
 
     const similarTitles = similarOptions.map(({ label }) => label);
     const similarItems = values.similar.filter(({ title }) =>
@@ -62,7 +62,16 @@ function Forms() {
     );
 
     if (id) {
-      await editMovie({ similar: similarItems, ...rest }, id, state);
+      await editMovie(
+        {
+          similar: similarItems,
+          year: parseInt(year),
+          rank: parseInt(rank),
+          ...rest,
+        },
+        id,
+        state,
+      );
 
       message.success('item updated successfully');
     } else {
@@ -141,24 +150,8 @@ function Forms() {
                 </Col>
               </Row>
               <Row gutter={10}>
-                <Col span={3}>
-                  <Select
-                    labelText={'is Ranked?'}
-                    options={[
-                      { label: 'true', value: true },
-                      { label: 'false', value: false },
-                    ]}
-                    value={values.rank.isRanked}
-                    onClick={(value) => setFieldValue('rank.isRanked', value)}
-                  />
-                </Col>
-                <CustomInput
-                  name="rank.rankNumber"
-                  placeholder="Rank Number"
-                  span={3}
-                />
-
-                <Col span={18}>
+                <CustomInput name="rank" placeholder="Rank" span={2} />
+                <Col span={22}>
                   <Select
                     labelText="similar"
                     removeItem={(value) => {

@@ -22,9 +22,6 @@ export const initialValues = {
   trailer: '',
   plot: '',
   similar: [],
-  rank: {
-    isRanked: false,
-    rankNumber: '',
-  },
+  rank: 0,
   featured: false,
 };

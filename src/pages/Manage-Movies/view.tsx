@@ -69,7 +69,7 @@ function ViewMovie() {
       <ViewContainer>
         <header>
           <div>
-            {movie.rank.isRanked ? (
+            {movie.rank ? (
               <span className="rank">{movie.rank.rankNumber}</span>
             ) : null}
             <h1 className="title">{movie.title}</h1>
