@@ -1,28 +1,42 @@
 import axios from 'axios';
 
 export const getAllMovieGenres = async () => {
-  const { data: genreList } = await axios.get(
-    `${process.env.REACT_APP_BASE_URL}/genres`,
-  );
+  const { data } = await axios({
+    method: 'GET',
+    url: '/genres',
+  });
 
-  return genreList;
+  return data;
 };
 
 export const getGenreById = async (id) => {
-  const { data } = await axios.get(
-    `${process.env.REACT_APP_BASE_URL}/genres/${id}`,
-  );
+  const { data } = await axios({
+    method: 'GET',
+    url: `/genres/${id}`,
+  });
+
   return data;
 };
 
 export const editGenre = async (id, values) => {
-  await axios.put(`${process.env.REACT_APP_BASE_URL}/genres/${id}`, values);
+  await axios({
+    method: 'PUT',
+    url: `/genres/${id}`,
+    data: values,
+  });
 };
 
 export const createGenre = async (values) => {
-  await axios.post(`${process.env.REACT_APP_BASE_URL}/genres`, values);
+  await axios({
+    method: 'POST',
+    url: '/genres',
+    data: values,
+  });
 };
 
 export const deleteGenre = async (id) => {
-  await axios.delete(`${process.env.REACT_APP_BASE_URL}/genres/${id}`);
+  await axios({
+    method: 'DELETE',
+    url: `/genres/${id}`,
+  });
 };

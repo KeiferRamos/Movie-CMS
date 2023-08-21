@@ -1,4 +1,4 @@
-import React, { ReactNode, useContext, useEffect, useState } from 'react';
+import React, { ReactNode, useContext, useEffect } from 'react';
 import { Modal, Menu } from 'antd';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
@@ -9,6 +9,7 @@ import {
   UserOutlined,
   ExclamationCircleFilled,
   BarsOutlined,
+  ProfileTwoTone,
 } from '@ant-design/icons';
 
 import { GlobalContext } from '../context/context';
@@ -83,6 +84,7 @@ function SideBar() {
         '/manage-genres',
         <BarsOutlined style={{ color: '#1677ff' }} />,
       ),
+      getItem('Manage Blogs', '/manage-blogs', <ProfileTwoTone />),
     ]),
   ];
 

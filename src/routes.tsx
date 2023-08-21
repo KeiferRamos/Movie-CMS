@@ -9,6 +9,8 @@ import MovieForm from './pages/Manage-Movies/form';
 import ViewMovie from './pages/Manage-Movies/view';
 import ManageGenre from './pages/Manage-Genres/index';
 import GenreForm from './pages/Manage-Genres/form';
+import BlogForm from './pages/Manage-Blogs/form';
+import ManageBlogs from './pages/Manage-Blogs';
 
 function RoutesPage() {
   return (
@@ -34,6 +36,11 @@ function RoutesPage() {
       <Route path="/manage-genres" element={<ManageGenre />} />
       <Route path="/manage-genres/add-genre" element={<GenreForm />} />
       <Route path="/manage-genres/edit/:id" element={<GenreForm />} />
+
+      {/* blogs routes */}
+      <Route path="/manage-blogs" element={<ManageBlogs />} />
+      <Route path="/manage-blogs/add-blog" element={<BlogForm />} />
+      <Route path="/manage-blogs/edit/:id" element={<BlogForm />} />
     </Routes>
   );
 }

@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 const StyledEditor = styled.div`
   margin: 10px 0;
+  width: 100%;
 
   .ck-content {
     height: 250px;

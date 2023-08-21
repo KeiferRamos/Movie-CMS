@@ -63,6 +63,7 @@ function Form() {
               <Row gutter={20}>
                 <UploadContainer span={6}>
                   <UploadImage
+                    style={{ height: '260px' }}
                     value={values.image}
                     onchange={(value) => setFieldValue('image', value)}
                   ></UploadImage>

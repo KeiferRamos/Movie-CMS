@@ -47,12 +47,14 @@ function Forms() {
               <Row>
                 <UploadContainer span={18}>
                   <Upload
+                    style={{ height: '450px' }}
                     value={values.image}
                     onchange={(value) => setFieldValue('image', value)}
                   />
                 </UploadContainer>
                 <UploadContainer span={6}>
                   <Upload
+                    style={{ height: '450px' }}
                     value={values.mobileImage}
                     onchange={(value) => setFieldValue('mobileImage', value)}
                   />

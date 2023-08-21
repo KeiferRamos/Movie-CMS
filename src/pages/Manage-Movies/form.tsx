@@ -61,21 +61,19 @@ function Forms() {
       similarTitles.includes(title),
     );
 
+    const data = {
+      similar: similarItems,
+      year: parseInt(year),
+      rank: parseInt(rank),
+      ...rest,
+    };
+
     if (id) {
-      await editMovie(
-        {
-          similar: similarItems,
-          year: parseInt(year),
-          rank: parseInt(rank),
-          ...rest,
-        },
-        id,
-        state,
-      );
+      await editMovie(data, id, state);
 
       message.success('item updated successfully');
     } else {
-      await createMovie(values, id, state);
+      await createMovie(data, state);
 
       message.success('item added successfully');
     }
@@ -118,12 +116,14 @@ function Forms() {
               <Row>
                 <UploadContainer span={6}>
                   <Upload
+                    style={{ height: '450px' }}
                     value={values.mobileImage}
                     onchange={(value) => setFieldValue('mobileImage', value)}
                   ></Upload>
                 </UploadContainer>
                 <UploadContainer span={18}>
                   <Upload
+                    style={{ height: '450px' }}
                     value={values.image}
                     onchange={(value) => setFieldValue('image', value)}
                   ></Upload>

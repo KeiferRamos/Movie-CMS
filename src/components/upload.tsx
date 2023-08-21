@@ -32,6 +32,7 @@ const StyledUpload = styled.div`
   .image-container {
     border: 3px dashed #bebebe;
     width: 100%;
+    height: 100%;
     display: grid;
     place-items: center;
     position: relative;
