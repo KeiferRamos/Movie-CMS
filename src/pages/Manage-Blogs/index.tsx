@@ -44,7 +44,7 @@ function ManageBlogs() {
                 <DeleteTwoTone twoToneColor="#eb2f96" />,
               ]}
             >
-              <Card.Meta title={title} description={`created by ${author}`} />
+              <Card.Meta title={title} description={`Created By: ${author}`} />
             </StyledBlog>
           );
         })}

@@ -13,6 +13,7 @@ import Modal from '../../components/modal';
 import ImageIcon from '../../global/images/image.png';
 
 import { UpdateBlog, createBlog, getBlogById } from '../../api/blogs';
+import Select from '../../components/select';
 
 function Forms() {
   const [show, setShow] = useState(false);
@@ -74,6 +75,7 @@ function Forms() {
                       loading={true}
                     ></Card>
                   </Col>
+
                   <Col onClick={() => addContent('bannerImage')}>
                     <h3 style={{ textAlign: 'center' }}>IMAGE</h3>
                     <StyledImageContainer>
@@ -90,9 +92,20 @@ function Forms() {
                 />
               </Row>
               <br />
-              <Row gutter={20}>
-                <CustomInput span={12} name="title" placeholder="Title" />
-                <CustomInput span={12} name="author" placeholder="Author" />
+              <Row gutter={10}>
+                <CustomInput span={8} name="title" placeholder="Title" />
+                <Col span={8}>
+                  <Select
+                    labelText={'Trending'}
+                    options={[
+                      { label: 'true', value: true },
+                      { label: 'false', value: false },
+                    ]}
+                    value={values.trending}
+                    onClick={(value) => setFieldValue('trending', value)}
+                  />
+                </Col>
+                <CustomInput span={8} name="author" placeholder="Author" />
               </Row>
               <br />
               <Row>

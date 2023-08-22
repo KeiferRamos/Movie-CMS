@@ -3,4 +3,5 @@ export const initialValues = {
   bannerImage: '',
   contents: [],
   author: '',
+  trending: false,
 };

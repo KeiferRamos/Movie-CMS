@@ -1,8 +1,8 @@
 import { useContext, useEffect, useState } from 'react';
 import Layout from '../../layout/main';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ValidationSchema, initialValues } from './constant';
-import { Row, Col, message } from 'antd';
+import { Row, Col, message, Input } from 'antd';
 import Upload from '../../components/upload';
 import { Formik } from 'formik';
 import CustomInput from '../../components/input';
@@ -26,6 +26,7 @@ function Forms() {
   const [similarOptions, setSimilarOptions] = useState([]);
   const [movie, setMovie] = useState<any>(initialValues);
   const { state }: any = useContext(GlobalContext);
+  const navigate = useNavigate();
   const { id }: any = useParams();
 
   useEffect(() => {
@@ -70,12 +71,12 @@ function Forms() {
 
     if (id) {
       await editMovie(data, id, state);
-
       message.success('item updated successfully');
+      navigate('/manage-movies');
     } else {
       await createMovie(data, state);
-
       message.success('item added successfully');
+      navigate('/manage-movies');
     }
   };
 
@@ -186,11 +187,18 @@ function Forms() {
               </Row>
               <br />
               <Row>
-                <Richtext
-                  data={values.plot}
-                  onchange={(value) => setFieldValue('plot', value)}
-                ></Richtext>
+                <Input.TextArea
+                  value={values.plot}
+                  onChange={(e) => setFieldValue('plot', e.target.value)}
+                  name="plot"
+                  placeholder="plot here..."
+                  autoSize={{
+                    minRows: 8,
+                    maxRows: 8,
+                  }}
+                ></Input.TextArea>
               </Row>
+              <br />
               <SubmitButton disabled={!dirty || !isValid}>Save</SubmitButton>
             </Form>
           );
