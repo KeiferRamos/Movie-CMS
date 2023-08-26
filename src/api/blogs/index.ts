@@ -5,6 +5,9 @@ export const createBlog = async (data) => {
     method: 'POST',
     url: '/blogs',
     data,
+    headers: {
+      Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,
+    },
   });
 };
 
@@ -13,6 +16,9 @@ export const UpdateBlog = async (data, id) => {
     method: 'PUT',
     url: `/blogs/${id}`,
     data,
+    headers: {
+      Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,
+    },
   });
 };
 

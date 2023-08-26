@@ -23,6 +23,9 @@ export const editGenre = async (id, values) => {
     method: 'PUT',
     url: `/genres/${id}`,
     data: values,
+    headers: {
+      Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,
+    },
   });
 };
 
@@ -31,6 +34,9 @@ export const createGenre = async (values) => {
     method: 'POST',
     url: '/genres',
     data: values,
+    headers: {
+      Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,
+    },
   });
 };
 
@@ -38,5 +44,8 @@ export const deleteGenre = async (id) => {
   await axios({
     method: 'DELETE',
     url: `/genres/${id}`,
+    headers: {
+      Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,
+    },
   });
 };

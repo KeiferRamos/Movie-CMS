@@ -6,6 +6,9 @@ export const editMovie = async (values, id, state) => {
     method: 'PUT',
     url: `/movies/${values._id}`,
     data: values,
+    headers: {
+      Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,
+    },
   });
 
   await axios({
@@ -26,6 +29,9 @@ export const createMovie = async (values, state) => {
     method: 'POST',
     url: '/movies',
     data: values,
+    headers: {
+      Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,
+    },
   });
 
   await axios({
@@ -53,6 +59,9 @@ export const deleteMovieById = async (username, id, movie) => {
   await axios({
     method: 'DELETE',
     url: `/movies/${id}`,
+    headers: {
+      Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,
+    },
   });
 
   await axios({
