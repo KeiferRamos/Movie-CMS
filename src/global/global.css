@@ -23,13 +23,13 @@ body {
   border-radius: 5px;
 }
 
-.administrator {
+.admin {
   background: rgba(24, 227, 56, 0.4);
   border: #3de456 1px solid;
   color: #159529;
 }
 
-.developer {
+.dev {
   background: rgba(255, 153, 0, 0.4);
   border: #f39e66 1px solid;
   color: #de6610;

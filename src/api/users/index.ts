@@ -5,6 +5,9 @@ export const getAllUsers = async () => {
   const { data } = await axios({
     method: 'GET',
     url: '/users',
+    headers: {
+      Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,
+    },
   });
   return data;
 };
@@ -13,16 +16,22 @@ export const getUser = async (id) => {
   const { data } = await axios({
     method: 'GET',
     url: `/users/${id}`,
+    headers: {
+      Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,
+    },
   });
 
   return data;
 };
 
-export const editUser = async (values) => {
+export const editUser = async (values, id) => {
   const { data } = await axios({
     method: 'PUT',
-    url: `/users/${values._id}`,
+    url: `/users/${id}`,
     data: values,
+    headers: {
+      Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,
+    },
   });
 
   return data;
@@ -32,17 +41,8 @@ export const deleteUserById = async (id) => {
   const { data } = await axios({
     method: 'DELETE',
     url: `/users/${id}`,
-  });
-
-  await axios({
-    method: 'POST',
-    url: '/activities',
-    data: {
-      type: 'user',
-      id: id,
-      user: id,
-      summary: `deleted user with id ${id}`,
-      action: 'delete',
+    headers: {
+      Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,
     },
   });
 

@@ -1,21 +1,26 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Formik } from 'formik';
-import { Row, Col } from 'antd';
-import Richtext from '../../components/richtext';
-import Select from '../../components/select';
-import { ValidationSchema, initialValues } from './constant';
+import { Row, Col, Drawer, Select, Button, message } from 'antd';
+import {
+  ValidationSchema,
+  columns,
+  initialValues,
+  permissions,
+} from './constant';
 import { Form as CreateForm, SubmitButton } from 'formik-antd';
-import UploadImage from '../../components/upload';
 import CustomInput from '../../components/input';
 import { useParams } from 'react-router-dom';
 import Layout from '../../layout/main';
-import { RoleOptions } from '../Login/constant';
 import { editUser, getUser } from '../../api/users';
-import { UploadContainer } from '../Manage-Movies/styled';
+import { Profile, StyledSelect } from './style';
+import Upload from '../../components/upload';
+import CustomTable from '../../components/table';
 
 function Form() {
   const { id }: any = useParams();
+
+  const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState(initialValues);
 
@@ -28,13 +33,27 @@ function Form() {
 
   const submitForm = async (values) => {
     try {
-      const data = await editUser(values);
-
+      const data = await editUser(values, id);
       setUser(data);
+      setOpen(false);
+      message.success('user updated successfully');
     } catch (error) {
       console.log(error);
     }
   };
+
+  const showDrawer = () => {
+    setOpen(true);
+  };
+  const onClose = () => {
+    setOpen(false);
+  };
+
+  const handleChange = (value) => {
+    console.log(`selected ${value}`);
+  };
+
+  const { Option } = Select;
 
   return (
     <Layout
@@ -44,108 +63,110 @@ function Form() {
           title: <Link to="/manage-users">Manage User</Link>,
         },
         id && {
-          title: <Link to={`/manage-users/${user._id}`}>{user.username}</Link>,
+          title: `${user.firstName} ${user.lastName}`,
         },
         {
           title: <p>{id ? 'Edit' : 'Add'}</p>,
         },
       ]}
     >
-      <Formik
-        initialValues={user}
-        onSubmit={submitForm}
-        validationSchema={ValidationSchema}
-      >
-        {({ setFieldValue, values, dirty, isValid }) => {
-          console.log(values.image);
-          return (
-            <CreateForm>
-              <Row gutter={20}>
-                <UploadContainer span={6}>
-                  <UploadImage
-                    style={{ height: '260px' }}
-                    value={values.image}
-                    onchange={(value) => setFieldValue('image', value)}
-                  ></UploadImage>
-                </UploadContainer>
-                <Col span={18}>
-                  <Row gutter={20}>
-                    <CustomInput
-                      name="username"
-                      placeholder="Username"
-                      span={12}
-                    />
-                    <Col span={12}>
-                      <Select
-                        labelText={'Role'}
-                        options={RoleOptions}
-                        disabled={true}
-                        onClick={(value) => setFieldValue('role', value)}
-                        value={values.role}
-                      ></Select>
-                    </Col>
-                  </Row>
-                  <Row gutter={20} style={{ marginBottom: 10 }}>
-                    <CustomInput name="email" placeholder="Email" span={12} />
-                    <CustomInput
-                      name="contactNumber"
-                      placeholder="Contact Number"
-                      span={12}
-                    />
-                  </Row>
-                  <Row gutter={20}>
-                    <CustomInput
-                      span={8}
-                      name="fullName.firstName"
-                      placeholder="First Name"
-                    />
-                    <CustomInput
-                      span={8}
-                      name="fullName.middle Name"
-                      placeholder="Middle Name"
-                    />
-                    <CustomInput
-                      span={8}
-                      name="fullName.last Name"
-                      placeholder="Last Name"
-                    />
-                  </Row>
-                </Col>
-              </Row>
-              <Row style={{ marginTop: 10 }} gutter={15}>
-                <CustomInput
-                  name="address.blockNumber"
-                  placeholder="Block Number"
-                  span={4}
+      <Drawer title="Edit User" placement="right" onClose={onClose} open={open}>
+        <Formik
+          initialValues={user}
+          onSubmit={submitForm}
+          validationSchema={ValidationSchema}
+        >
+          {({ setFieldValue, values, isValid, dirty }) => {
+            console.log(dirty, isValid);
+            return (
+              <CreateForm>
+                <Upload
+                  style={{
+                    height: 300,
+                  }}
+                  value={values.image}
+                  onchange={(image) => {
+                    setFieldValue('image', image);
+                  }}
                 />
                 <CustomInput
-                  name="address.Street"
-                  placeholder="Street"
-                  span={5}
+                  name="firstName"
+                  span={24}
+                  placeholder="First name"
                 />
                 <CustomInput
-                  name="address.Barangay"
-                  placeholder="Barangay"
-                  span={5}
+                  name="lastName"
+                  span={24}
+                  placeholder="Last name"
                 />
-                <CustomInput name="address.City" placeholder="City" span={5} />
                 <CustomInput
-                  name="address.Province"
-                  placeholder="Province"
-                  span={5}
+                  name="contactNumber"
+                  span={24}
+                  placeholder="Contact Number"
                 />
-              </Row>
-              <Row>
-                <Richtext
-                  data={values.bio}
-                  onchange={(value) => setFieldValue('bio', value)}
-                />
-              </Row>
-              <SubmitButton disabled={!dirty || !isValid}>submit</SubmitButton>
-            </CreateForm>
-          );
-        }}
-      </Formik>
+                <CustomInput name="email" span={24} placeholder="email" />
+                <StyledSelect>
+                  <h3>User Permissions</h3>
+                  <Select
+                    mode="multiple"
+                    style={{
+                      width: '100%',
+                      marginBottom: '1em',
+                    }}
+                    value={values.permissions}
+                    placeholder="select user permissions"
+                    onChange={(value) => {
+                      setFieldValue('permissions', value);
+                    }}
+                    optionLabelProp="label"
+                  >
+                    {permissions.map((value) => {
+                      return (
+                        <Option value={value}>
+                          {value.split(':').join(' ')}
+                        </Option>
+                      );
+                    })}
+                  </Select>
+                </StyledSelect>
+                <SubmitButton>Update</SubmitButton>
+              </CreateForm>
+            );
+          }}
+        </Formik>
+      </Drawer>
+      <Row gutter={20}>
+        <Col span={8}>
+          <Profile>
+            {user.image ? (
+              <img src={user.image} alt="" />
+            ) : (
+              <img
+                src={`https://api.dicebear.com/7.x/initials/svg?seed=${user.firstName} ${user.lastName}`}
+                alt=""
+              />
+            )}
+
+            <h3>
+              {user.firstName} {user.lastName}
+            </h3>
+            <span>
+              <b>{user.role === 'admin' ? 'Administrator' : 'Developer'}</b>
+            </span>
+            <div>
+              <p>Email: {user.email}</p>
+              <br />
+              <p>Contact Number: {user.contactNumber}</p>
+            </div>
+            <Button type="primary" onClick={showDrawer}>
+              Update Profile
+            </Button>
+          </Profile>
+        </Col>
+        <Col span={16}>
+          <CustomTable dataSource={user.activities} columns={columns} />
+        </Col>
+      </Row>
     </Layout>
   );
 }

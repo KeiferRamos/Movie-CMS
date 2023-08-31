@@ -1,33 +1,36 @@
-import axios from 'axios';
 import Layout from '../../layout/main';
-import { useContext, useEffect, useState } from 'react';
-import {
-  EditTwoTone,
-  DeleteTwoTone,
-  PlaySquareTwoTone,
-  ExclamationCircleFilled,
-} from '@ant-design/icons';
-import { Link } from 'react-router-dom';
-import { Modal, message } from 'antd';
-import { setAddress } from '../../utils/setAdress';
+import { useEffect, useState } from 'react';
 import CustomTable from '../../components/table';
-import { StyledActions } from './style';
-import { GlobalContext } from '../../context/context';
 import { deleteUserById, getAllUsers } from '../../api/users';
+import { DeleteTwoTone, EditTwoTone } from '@ant-design/icons';
+import { Modal, message } from 'antd';
+import { StyledActions } from './style';
+import { Link } from 'react-router-dom';
 
 function ManageUser() {
-  const [data, setData] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [idToDelete, setIdToDelete] = useState('');
+  const [confirmLoading, setConfirmLoading] = useState(false);
   const [list, setList] = useState([]);
   const [fetch, setFetch] = useState(true);
-  const {
-    state: { id, role },
-  }: any = useContext(GlobalContext);
 
   const columns = [
+    {
+      title: 'User ID',
+      dataIndex: '_id',
+      key: '_id',
+    },
     {
       title: 'Username',
       dataIndex: 'username',
       key: 'username',
+      render: (value, record) => {
+        return (
+          <p>
+            {record.firstName} {record.lastName}
+          </p>
+        );
+      },
       sorter: (a, b) => {
         return a.username.localeCompare(b.username);
       },
@@ -45,64 +48,58 @@ function ManageUser() {
       dataIndex: 'role',
       key: 'role',
       filters: [
-        { text: 'Administrator', value: 'administrator' },
-        { text: 'Developer', value: 'developer' },
-        { text: 'Project Manager', value: 'manager' },
+        { text: 'Administrator', value: 'admin' },
+        { text: 'Developer', value: 'dev' },
       ],
       onFilter: (val, record) => record.role && record.role === val,
       render: (text: string) => {
-        return <p className={`role ${text}`}>{text}</p>;
+        return (
+          <p className={`role ${text}`}>
+            {text === 'admin' ? 'Administrator' : 'Developer'}
+          </p>
+        );
       },
-    },
-    {
-      title: 'Adress',
-      dataIndex: 'address',
-      key: 'address',
-      render: (_, record) => setAddress(record.address),
     },
     {
       title: 'Action',
       key: 'action',
-      render: (_, record) => {
+      render: (val, record) => {
         return (
           <StyledActions>
-            {id === record._id ? (
-              <Link to={`/manage-users/edit/${record._id}`}>
-                <EditTwoTone />
-              </Link>
-            ) : null}
-            {role === 'administrator' || id === record._id ? (
-              <DeleteTwoTone
-                twoToneColor="#eb2f96"
-                onClick={() =>
-                  Modal.confirm({
-                    title: 'Are you sure you want to delete this user?',
-                    icon: <ExclamationCircleFilled />,
-                    onOk: async () => {
-                      await deleteUserById(record._id);
-                      message.success('user deleted successfully!');
-                      setFetch(true);
-                    },
-                  })
-                }
-              />
-            ) : null}
-            {record.bio ? (
-              <Link to={`/manage-users/${record._id}`}>
-                <PlaySquareTwoTone twoToneColor="#52c41a" />
-              </Link>
-            ) : null}
+            <DeleteTwoTone
+              twoToneColor={'#f7078b'}
+              onClick={() => {
+                setOpen(true);
+                setIdToDelete(record._id);
+              }}
+            />
+            <Link to={`/manage-users/edit/${record._id}`}>
+              <EditTwoTone />
+            </Link>
           </StyledActions>
         );
       },
     },
   ];
 
+  const handleOk = () => {
+    setConfirmLoading(true);
+    deleteUserById(idToDelete).then(() => {
+      setConfirmLoading(true);
+      setOpen(false);
+      setFetch(true);
+      message.success('user deleted successfully');
+    });
+  };
+
+  const handleCancel = () => {
+    setOpen(false);
+  };
+
   useEffect(() => {
     if (fetch) {
       getAllUsers()
         .then((data) => {
-          setData(data);
           setList(data);
           setFetch(false);
         })
@@ -111,43 +108,6 @@ function ManageUser() {
         });
     }
   }, [fetch]);
-
-  const onSearch = (value) => {
-    if (value) {
-      const filteredList = [];
-
-      data.forEach((item) => {
-        const { fullName, address } = item;
-
-        let name = '';
-        let location = '';
-
-        const { firstName, lastName, middleName } = fullName;
-        name = `${firstName} ${middleName} ${lastName}`;
-
-        const { blockNumber, Street, Barangay, City, Province } = address;
-        location = `${blockNumber} ${Street} ${Barangay} ${City} ${Province}`;
-
-        const data = {
-          ...item,
-          name,
-          location,
-        };
-
-        const itemsKey = Object.keys(data);
-
-        const searchedItem = itemsKey.find((key) => data[key] === value);
-        if (searchedItem) {
-          filteredList.push(item);
-        }
-      });
-      if (filteredList.length) {
-        setList(filteredList);
-      }
-    } else {
-      setList(data);
-    }
-  };
 
   return (
     <Layout
@@ -158,7 +118,16 @@ function ManageUser() {
         },
       ]}
     >
-      <CustomTable dataSource={list} columns={columns} onSearch={onSearch} />
+      <Modal
+        title="Title"
+        open={open}
+        onOk={handleOk}
+        confirmLoading={confirmLoading}
+        onCancel={handleCancel}
+      >
+        <p>Are you sure you want to delete the user with id {idToDelete}</p>
+      </Modal>
+      <CustomTable dataSource={list} columns={columns} />
     </Layout>
   );
 }

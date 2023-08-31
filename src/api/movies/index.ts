@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { setConfig } from '../../utils/setConfig';
 
 export const editMovie = async (values, id, state) => {
   await axios({
@@ -8,18 +7,6 @@ export const editMovie = async (values, id, state) => {
     data: values,
     headers: {
       Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,
-    },
-  });
-
-  await axios({
-    url: '/activities',
-    method: 'POST',
-    data: {
-      type: 'movie',
-      id: id,
-      user: state.id,
-      summary: `updated movie with id ${id}`,
-      action: 'update',
     },
   });
 };
@@ -31,17 +18,6 @@ export const createMovie = async (values, state) => {
     data: values,
     headers: {
       Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,
-    },
-  });
-
-  await axios({
-    method: 'POST',
-    url: '/activities',
-    data: {
-      type: 'movie',
-      user: state.id,
-      summary: `added item from movie list`,
-      action: 'Add',
     },
   });
 };
@@ -61,18 +37,6 @@ export const deleteMovieById = async (username, id, movie) => {
     url: `/movies/${id}`,
     headers: {
       Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,
-    },
-  });
-
-  await axios({
-    method: 'POST',
-    url: '/activities',
-    data: {
-      type: 'movie',
-      id: movie._id,
-      user: username,
-      summary: `You added item from movie list`,
-      action: 'Add',
     },
   });
 };

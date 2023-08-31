@@ -9,26 +9,35 @@ const StyledTable = styled.div`
   position: relative;
   margin-bottom: 50px;
 
-  .ant-pagination {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    margin-bottom: 20px;
-    margin-right: 20px;
-    z-index: -1;
+  .model {
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 3px;
+    text-transform: capitalize;
+    text-align: center;
+
+    &-genre {
+      background: #ed6b92;
+    }
+
+    &-movie {
+      background: #6bbfed;
+    }
+
+    &-blog {
+      background: #6bed6d;
+    }
   }
 `;
 
-function CustomTable({ onSearch, columns, dataSource }) {
+function CustomTable({ columns, dataSource }) {
   return (
     <StyledTable>
-      <Input.Search
-        placeholder="Search Here"
-        onSearch={onSearch}
-        enterButton
-        style={{ width: 350 }}
+      <Table
+        columns={columns}
+        dataSource={dataSource}
+        pagination={{ pageSize: 9 }}
       />
-      <Table columns={columns} dataSource={dataSource} />
     </StyledTable>
   );
 }

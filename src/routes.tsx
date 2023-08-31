@@ -3,7 +3,6 @@ import LoginPage from './pages/Login/login';
 import RegisterPage from './pages/Login/register';
 import ManageUser from './pages/Manage-User';
 import ManageMovies from './pages/Manage-Movies';
-import ViewUser from './pages/Manage-User/view';
 import UserForm from './pages/Manage-User/form';
 import MovieForm from './pages/Manage-Movies/form';
 import ViewMovie from './pages/Manage-Movies/view';
@@ -23,7 +22,6 @@ function RoutesPage() {
 
       {/* user routes */}
       <Route path="/manage-users" element={<ManageUser />} />
-      <Route path="/manage-users/:id" element={<ViewUser />} />
       <Route path="/manage-users/edit/:id" element={<UserForm />} />
 
       {/* movie routes */}

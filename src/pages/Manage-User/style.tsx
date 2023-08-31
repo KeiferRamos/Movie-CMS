@@ -1,20 +1,5 @@
-import { PageHeader } from '@ant-design/pro-layout';
+import { Select } from 'antd';
 import styled from 'styled-components';
-
-export const StyledPageHeader = styled(PageHeader)`
-  margin-bottom: 20px;
-  background: rgb(250, 249, 249);
-  padding: 10px;
-
-  .ant-page-header {
-    margin-bottom: 10px;
-
-    &-heading {
-      border: 1px solid rgb(235, 237, 240);
-      padding: 10px;
-    }
-  }
-`;
 
 export const StyledActions = styled.div`
   display: flex;
@@ -22,49 +7,6 @@ export const StyledActions = styled.div`
 
   svg {
     font-size: 18px;
-  }
-`;
-
-export const MenuItem = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-
-  svg {
-    font-size: 16px;
-  }
-
-  span {
-    font-size: 12px;
-    color: #828080;
-  }
-`;
-
-export const Icons = styled.div`
-  display: flex;
-  gap: 10px;
-  color: #3879e2;
-  margin-top: 15px;
-
-  span {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    svg {
-      font-size: 25px;
-    }
-  }
-`;
-
-export const Info = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  margin-bottom: 15px;
-  color: #9d9b9b;
-
-  svg {
-    font-size: 20px;
   }
 `;
 
@@ -82,5 +24,52 @@ export const ActionBtn = styled.div`
 
   svg {
     font-size: 16px;
+  }
+`;
+
+export const StyledSelect = styled.div`
+  h3 {
+    font-size: 16px;
+    display: block;
+    margin: 0 0 5px 5px;
+    text-transform: capitalize;
+    color: #4086e7;
+    font-weight: 400;
+  }
+
+  .ant-select-selection-overflow {
+    padding: 5px;
+  }
+
+  .ant-select-selection-item {
+    background: #116c90;
+    color: #fff;
+    padding: 5px 10px;
+    height: max-content;
+
+    svg {
+      color: #46aff1;
+    }
+  }
+`;
+
+export const Profile = styled.div`
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  padding: 30px;
+  gap: 10px;
+  border: 3px solid #bebebe;
+
+  div {
+    width: 100%;
+    margin: 2em 0;
+  }
+
+  img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
   }
 `;

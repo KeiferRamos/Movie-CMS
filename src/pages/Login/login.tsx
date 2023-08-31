@@ -25,8 +25,8 @@ function LoginPage() {
     try {
       const data = await createUser(values);
 
-      const items: {} = jwt(data.access_token);
-      const initialValue = { ...items, image: data.user.image };
+      const items = jwt(data.access_token);
+      const initialValue = items;
       sessionStorage.setItem('initial_value', JSON.stringify(initialValue));
 
       dispatch({

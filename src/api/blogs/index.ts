@@ -44,5 +44,8 @@ export const deleteBlog = async (id) => {
   return axios({
     method: 'DELETE',
     url: `/blogs/${id}`,
+    headers: {
+      Authorization: `Bearer ${sessionStorage.getItem('access_token')}`,
+    },
   });
 };
